@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -8,6 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
+
 namespace Think;
 
 /**
@@ -102,7 +104,7 @@ class View
         // 网页字符编码
         header('Content-Type:' . $contentType . '; charset=' . $charset);
         header('Cache-control: ' . C('HTTP_CACHE_CONTROL')); // 页面缓存控制
-        header('X-Powered-By:ThinkPHP');
+        // header('X-Powered-By:ThinkPHP');
         // 输出模板文件
         echo $content;
     }
@@ -123,7 +125,6 @@ class View
             if (!is_file($templateFile)) {
                 E(L('_TEMPLATE_NOT_EXIST_') . ':' . $templateFile);
             }
-
         } else {
             defined('THEME_PATH') or define('THEME_PATH', $this->getThemePath());
         }
@@ -250,7 +251,7 @@ class View
             /* 获取模板主题名称 */
             $theme = C('DEFAULT_THEME');
             if (C('TMPL_DETECT_THEME')) {
-// 自动侦测模板主题
+                // 自动侦测模板主题
                 $t = C('VAR_TEMPLATE');
                 if (isset($_GET[$t])) {
                     $theme = $_GET[$t];
@@ -266,5 +267,4 @@ class View
         defined('THEME_NAME') || define('THEME_NAME', $theme); // 当前模板主题名称
         return $theme ? $theme . '/' : '';
     }
-
 }
