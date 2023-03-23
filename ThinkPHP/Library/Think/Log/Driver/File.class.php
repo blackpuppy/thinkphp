@@ -13,17 +13,22 @@ namespace Think\Log\Driver;
 
 class File
 {
-
-    protected $config = array(
+    protected $config = [
         'log_time_format' => ' c ',
         'log_file_size'   => 2097152,
         'log_path'        => '',
-    );
+    ];
 
     // 实例化并传入参数
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
-        $this->config = array_merge($this->config, $config);
+        $logFileSize   = C('LOG_FILE_SIZE', null, 2097152);
+        $defaultConfig = [
+            'log_time_format' => ' c ',
+            'log_file_size'   => $logFileSize,
+            'log_path'        => '',
+        ];
+        $this->config = array_merge($defaultConfig, $config);
     }
 
     /**
@@ -48,6 +53,13 @@ class File
         if (is_file($destination) && floor($this->config['log_file_size']) <= filesize($destination)) {
             rename($destination, dirname($destination) . '/' . time() . '-' . basename($destination));
         }
-        error_log("[{$now}] " . $_SERVER['REMOTE_ADDR'] . ' ' . $_SERVER['REQUEST_URI'] . "\r\n{$log}\r\n", 3, $destination);
+        error_log(
+            "[{$now}] " . getClientIp() .
+            ' [' . $_SERVER['REQUEST_METHOD'] . '] ' .
+            $_SERVER['REQUEST_URI'] . PHP_EOL .
+            "{$log}" . PHP_EOL,
+            3,
+            $destination
+        );
     }
 }
