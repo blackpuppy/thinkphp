@@ -210,7 +210,7 @@ class Http
         ob_start();
         $headers = getallheaders();
         if (!empty($header)) {
-            $info = $headers[$header];
+            $info = isset($headers[$header]) ? $headers[$header] : '';
             echo ($header . ':' . $info . "\n");
         } else {
             foreach ($headers as $key => $val) {
