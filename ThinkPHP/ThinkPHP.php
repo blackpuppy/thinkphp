@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
@@ -40,7 +41,7 @@ defined('APP_STATUS') or define('APP_STATUS', ''); // 应用状态 加载对应�
 defined('APP_DEBUG') or define('APP_DEBUG', false); // 是否调试模式
 
 if (function_exists('saeAutoLoader')) {
-// 自动识别SAE环境
+    // 自动识别SAE环境
     defined('APP_MODE') or define('APP_MODE', 'sae');
     defined('STORAGE_TYPE') or define('STORAGE_TYPE', 'Sae');
 } else {
@@ -77,11 +78,17 @@ define('IS_CGI', (0 === strpos(PHP_SAPI, 'cgi') || false !== strpos(PHP_SAPI, 'f
 define('IS_WIN', strstr(PHP_OS, 'WIN') ? 1 : 0);
 define('IS_CLI', PHP_SAPI == 'cli' ? 1 : 0);
 
-if (!IS_CLI) {
+if (IS_CGI) {
+    if (!defined('_PHP_FILE_')) {
+        // CGI模式下
+        $_temp = explode('.php', $_SERVER['PHP_SELF']);
+        define('_PHP_FILE_', rtrim(str_replace($_SERVER['HTTP_HOST'], '', $_temp[0] . '.php'), '/'));
+    }
+} else {
     // 当前文件名
     if (!defined('_PHP_FILE_')) {
         if (IS_CGI) {
-            //CGI/FASTCGI模式下
+            // CGI/FASTCGI模式下
             $_temp = explode('.php', $_SERVER['PHP_SELF']);
             define('_PHP_FILE_', rtrim(str_replace($_SERVER['HTTP_HOST'], '', $_temp[0] . '.php'), '/'));
         } else {
