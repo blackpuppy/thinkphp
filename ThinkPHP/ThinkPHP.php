@@ -78,27 +78,19 @@ define('IS_CGI', (0 === strpos(PHP_SAPI, 'cgi') || false !== strpos(PHP_SAPI, 'f
 define('IS_WIN', strstr(PHP_OS, 'WIN') ? 1 : 0);
 define('IS_CLI', PHP_SAPI == 'cli' ? 1 : 0);
 
-if (IS_CGI) {
-    if (!defined('_PHP_FILE_')) {
-        // CGI模式下
+// 当前文件名
+if (!defined('_PHP_FILE_')) {
+    if (IS_CGI) {
+        // CGI/FASTCGI模式下
         $_temp = explode('.php', $_SERVER['PHP_SELF']);
         define('_PHP_FILE_', rtrim(str_replace($_SERVER['HTTP_HOST'], '', $_temp[0] . '.php'), '/'));
+    } else {
+        define('_PHP_FILE_', rtrim($_SERVER['SCRIPT_NAME'], '/'));
     }
-} else {
-    // 当前文件名
-    if (!defined('_PHP_FILE_')) {
-        if (IS_CGI) {
-            // CGI/FASTCGI模式下
-            $_temp = explode('.php', $_SERVER['PHP_SELF']);
-            define('_PHP_FILE_', rtrim(str_replace($_SERVER['HTTP_HOST'], '', $_temp[0] . '.php'), '/'));
-        } else {
-            define('_PHP_FILE_', rtrim($_SERVER['SCRIPT_NAME'], '/'));
-        }
-    }
-    if (!defined('__ROOT__')) {
-        $_root = rtrim(dirname(_PHP_FILE_), '/');
-        define('__ROOT__', (('/' == $_root || '\\' == $_root) ? '' : $_root));
-    }
+}
+if (!defined('__ROOT__')) {
+    $_root = rtrim(dirname(_PHP_FILE_), '/');
+    define('__ROOT__', (('/' == $_root || '\\' == $_root) ? '' : $_root));
 }
 
 // 加载核心Think类
