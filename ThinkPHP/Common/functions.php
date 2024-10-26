@@ -362,9 +362,11 @@ function I($name, $default = '', $filter = null, $datas = null)
         case 'server':
             $input = &$_SERVER;
             break;
-        case 'globals':
-            $input = &$GLOBALS;
-            break;
+        // https://www.php.net/manual/zh/reserved.variables.globals.php
+        // 从 PHP 8.1.0 起，不再支持对整个 $GLOBALS 数组的写访问，$GLOBALS 现在是全局符号表的只读副本。
+        // case 'globals':
+        //     $input = &$GLOBALS;
+        //     break;
         case 'data':
             $input = &$datas;
             break;
